@@ -54,10 +54,5 @@ python inference.py
    ```
    Navigate to `http://localhost:8000` to interact with the environment via API.
 
-## Hugging Face Spaces Deployment
-
-This repository is ready to be deployed as a Docker or Gradio/FastAPI application on Hugging Face Spaces.
-1. Create a new Space on Hugging Face.
-2. Select **Docker** or **FastAPI** as the Space SDK.
 3. Push this directory's files.
 4. The Space will automatically run `uvicorn app:app --host 0.0.0.0 --port 7860` (ensure `app.py` is configured for the Hugging Face default port).
