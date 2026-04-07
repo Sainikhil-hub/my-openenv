@@ -1,63 +1,79 @@
-# Smart Customer Support Agent - RL Environment
+# 🎧 Smart Customer Support Agent - RL Environment
 
-This repository contains our submission for **Round 1** of the Meta PyTorch Hackathon. 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Project Overview
+This repository contains our custom Reinforcement Learning (RL) and Generative AI environment submission for **Round 1** of the Meta PyTorch Hackathon. 
 
-We built a custom Reinforcement Learning (RL) environment using the PyTorch ecosystem, `gymnasium`, and the `OpenEnv` framework. The environment simulates a customer support scenario where an AI agent must balance resolution speed, customer satisfaction, and escalation costs.
+## 📖 Project Overview
+
+We built a custom `gymnasium` environment wrapped inside an `OpenEnv` compliant HTTP interface using FastAPI and PyTorch. The environment simulates a customer support scenario where an AI agent must balance resolution speed, customer satisfaction, and escalation protocols.
 
 ### Environment Dynamics
-The environment simulates a customer support scenario over a maximum of 10 turns.
-- **State Space:** `(issue_type, issue_complexity, customer_frustration, turns_elapsed)`
-  - All values are normalized to `0.0 - 1.0`.
-  - `issue_type`: 0.0 (Routine), 0.5 (Technical), or 1.0 (Billing).
-- **Action Space:** 
-  - `0`: Respond automatically (solves low complexity issues, otherwise increases frustration).
-  - `1`: Ask for more info (lowers complexity safely, unless it's a Billing issue).
-  - `2`: Escalate to human (100% resolution, but you only get points if escalating was necessary).
-- **Tasks (Grader Setup):**
-  - **Task 1 (Easy)**: Routine customer issue.
-  - **Task 2 (Medium)**: Technical issue requiring clarification steps.
-  - **Task 3 (Hard)**: Angry customer with a billing issue.
-- **Objective:** The episode terminates strictly with a success score between `0.0` and `1.0`.
+The environment simulates a customer support session with a hard limit of 10 conversational turns.
+- **State Space (Box):** `[issue_type, issue_complexity, customer_frustration, turns_elapsed]`
+  - All output arrays are strictly normalized between `0.0` and `1.0`.
+  - `issue_type`: Category indicator (Routine = 0.0, Technical = 0.5, Billing = 1.0).
+- **Action Space (Discrete):**
+  - `0 (Respond Automatically)`: Explains technical details. Attempts to resolve low-complexity issues directly, but angers the customer if the complexity is still too high.
+  - `1 (Ask for More Info)`: Lowers the complexity of a problem safely. *(Warning: Doing this on an angry billing customer will maximize frustration!)*
+  - `2 (Escalate to Human)`: Immediately resolves the incident, but provides limited points because human capital is expensive.
 
-## Baseline Agent
+### Hackathon Grader Evaluation (3 Tasks)
+To comply with the Round 1 Meta rules, the environment emits a final evaluation score strictly bounded between `0.0` and `1.0` upon successful termination across three specific scenarios:
+- **Task 0 (Easy)**: Routine customer issue.
+- **Task 1 (Medium)**: Technical issue requiring step-by-step clarification.
+- **Task 2 (Hard)**: Angry customer experiencing a billing issue requiring immediate human escalation.
 
-We provide `inference.py` as a reference baseline agent using an OpenAI-compatible LLM:
+---
+
+## 🚀 Getting Started
+
+Ensure you have Python 3.10+ installed.
+
+### 1. Install Dependencies
 ```bash
-export API_BASE_URL="http://localhost:8000"
-export HF_TOKEN="your_hf_token"
-export MODEL_NAME="gpt-4o-mini"
-python inference.py
+git clone https://github.com/Sainikhil-hub/Create_environment.git
+cd Create_environment
+pip install -r requirements.txt
 ```
 
-- [x] **OpenEnv Framework:** Environment is wrapped defensively in a FastAPI interface using `openenv-core`.
-- [x] **Public GitHub Repo:** This repository contains the full source code.
-- [x] **Requirements:** `requirements.txt` is provided in the root directory.
-- [x] **Demo Script:** `demo.py` trains a PPO model and contrasts it to a baseline strategy.
-- [x] **Hugging Face Spaces Deployment:** Prepared for deployment (see below).
+### 2. Run the Core API (OpenEnv Compliant)
+You **must** run the FastAPI backend server first before using the UI or launching the LLM Baseline agent.
+```bash
+python app.py
+```
+*The API will be available at `http://localhost:8000`. You can test it by hitting the `/state` endpoint.*
 
-## How to Run Locally
+### 3. Run the LLM Baseline Agent
+We have provided `inference.py`, an `openai` client-compatible baseline agent that reads the `[0.0, 0.0, 0.0, 0.0]` state format and acts on it in real-time. 
 
-1. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-2. **Run the Demo Script:**
-   This will train the PPO Agent (`stable-baselines3`) and evaluate its metrics compared to a static baseline logic.
-   ```bash
-   python demo.py
-   ```
-3. **Start the OpenEnv HTTP Server:**
-   ```bash
-   python app.py
-   ```
-   Navigate to `http://localhost:8000` to interact with the environment via API.
+In a **second terminal tab**, export your API key and run the agent:
+```bash
+# Windows PowerShell
+$env:OPENAI_API_KEY="sk-proj-YOUR_REAL_API_KEY_HERE"
+python inference.py
 
-## Hugging Face Spaces Deployment
+# Mac/Linux
+export OPENAI_API_KEY="sk-proj-YOUR_REAL_API_KEY_HERE"
+python inference.py
+```
+*Note: This will print the exact `[START]`, `[STEP]`, and `[END]` stdout blocks required by the baseline Hackathon auto-grader.*
 
-This repository is ready to be deployed as a Docker or Gradio/FastAPI application on Hugging Face Spaces.
-1. Create a new Space on Hugging Face.
-2. Select **Docker** or **FastAPI** as the Space SDK.
-3. Push this directory's files.
-4. The Space will automatically run `uvicorn app:app --host 0.0.0.0 --port 7860` (ensure `app.py` is configured for the Hugging Face default port).
+### 4. Interactive Human UI Dashboard
+To play through the environment manually to test the dynamics, you can launch our Gradio frontend.
+```bash
+python app_ui.py
+```
+Click the local link (`http://127.0.0.1:7860`) in your terminal to view the interactive Support Dashboard.
+
+---
+
+## ☁️ Deployment (Hugging Face Spaces)
+
+This code is production-ready for Hugging Face Spaces:
+1. Create a new Space on Hugging Face (SDK: **Docker**).
+2. Connect this repository.
+3. The Space will automatically build the included `Dockerfile` and expose the API and web UI server on port `7860`.
+
+---
+*Created for the Meta PyTorch Hackathon.*
