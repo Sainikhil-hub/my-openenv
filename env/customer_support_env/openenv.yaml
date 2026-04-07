@@ -1,0 +1,17 @@
+name: customer_support_env
+version: 0.1.0
+description: "A customer support environment."
+
+api:
+  url: "http://localhost:8000"
+  startup_command: "python app.py"
+
+spaces:
+  observation:
+    type: "box"
+    shape: [4]
+    dtype: "float32"
+  action:
+    type: "discrete"
+    n: 3
+    dtype: "int"
