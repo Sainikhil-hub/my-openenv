@@ -35,3 +35,31 @@ Ensure you have Python 3.10+ installed.
 git clone https://github.com/Sainikhil-hub/Create_environment.git
 cd Create_environment
 pip install -r requirements.txt
+```
+### 2. Run the Core API (OpenEnv Compliant)
+You must run the FastAPI backend server first before using the UI or launching the LLM Baseline agent.
+```bash
+python app.py
+```
+The API will be available at http://localhost:8000. You can test it by hitting the /state endpoint.
+
+### 3. Run the LLM Baseline Agent
+We have provided inference.py, an openai client-compatible baseline agent that reads the [0.0, 0.0, 0.0, 0.0] state format and acts on it in real-time.
+In a second terminal tab, export your API key and run the agent:
+```bash
+# Windows PowerShell
+$env:OPENAI_API_KEY="sk-proj-YOUR_REAL_API_KEY_HERE"
+python inference.py
+
+# Mac/Linux
+export OPENAI_API_KEY="sk-proj-YOUR_REAL_API_KEY_HERE"
+python inference.py
+```
+Note: This will print the exact [START], [STEP], and [END] stdout blocks required by the baseline Hackathon auto-grader.
+
+### 4. Interactive Human UI Dashboard
+To play through the environment manually to test the dynamics, you can launch our Gradio frontend.
+```bash
+python app_ui.py
+```
+Click the local link (http://127.0.0.1:7860) in your terminal to view the interactive Support Dashboard.
