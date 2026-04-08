@@ -1,3 +1,12 @@
+---
+title: Customer Support RL Env
+emoji: 🎧
+colorFrom: blue
+colorTo: purple
+sdk: docker
+pinned: false
+---
+
 # 🎧 Smart Customer Support Agent - RL Environment
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
