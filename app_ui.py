@@ -1,7 +1,7 @@
 import gradio as gr
 import requests
 
-API_URL = "http://127.0.0.1:8000"
+API_URL = "http://127.0.0.1:8000"  # FastAPI backend runs internally on port 8000
 
 def parse_obs(obs):
     types = {0.0: "Routine", 0.5: "Technical", 1.0: "Billing"}
@@ -163,4 +163,6 @@ with gr.Blocks(title="Smart Customer Support Dashboard") as demo:
     demo.load(init_env, outputs=[complexity_bar, frustration_bar, status_html, chatbot, score_store, state_store])
 
 if __name__ == "__main__":
-    demo.launch(server_name="0.0.0.0", server_port=7860, css=custom_css, share=True)
+    # On Hugging Face Spaces, bind to 0.0.0.0 so the proxy can reach the app.
+    # share=True is not needed (and can cause errors) on HF Spaces.
+    demo.launch(server_name="0.0.0.0", server_port=7860, css=custom_css)
