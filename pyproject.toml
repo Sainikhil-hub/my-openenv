@@ -3,14 +3,15 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.backends.legacy:build"
 
 [project]
-name = "my-openenv"
+name = "customer_support_env"
 version = "0.1.0"
-description = "Customer Support RL Environment"
+description = "A customer support RL environment"
 requires-python = ">=3.8"
 dependencies = [
-    "openenv-core",
+    "openenv-core>=0.1.0",
     "fastapi",
     "uvicorn",
+    "pydantic",
 ]
 
 [tool.setuptools.packages.find]
