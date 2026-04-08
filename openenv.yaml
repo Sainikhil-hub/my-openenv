@@ -2,6 +2,10 @@ name: customer_support_env
 version: 0.1.0
 description: "A customer support environment."
 
+modes:
+  - single
+  - multi
+
 api:
   url: "http://localhost:8000"
   startup_command: "python app.py"
