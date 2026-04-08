@@ -1,0 +1,10 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "my-openenv"
+version = "0.1.0"
+description = "Customer Support RL Environment"
+requires-python = ">=3.8"
+dependencies = []
