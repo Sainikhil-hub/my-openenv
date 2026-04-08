@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+import uvicorn
 
 app = FastAPI()
 
@@ -15,5 +16,7 @@ def step(action: dict):
     return {"observation": [0.0, 0.0, 0.0, 0.0], "reward": 0.0, "done": False}
 
 def main():
-    import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+if __name__ == '__main__':
+    main()
