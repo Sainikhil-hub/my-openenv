@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional, Any, Dict
 from src.environment import CustomerSupportEnv
+import gradio as gr
 import uvicorn
 
 app = FastAPI(title="Smart Customer Support Agent Env")
@@ -63,5 +64,10 @@ def step_env(body: ActionModel):
         "info": info
     }
 
+# ── Mount the Gradio dashboard at /ui ──────────────────────────────────────
+# Import here (after FastAPI routes) to avoid circular issues at module load
+from app_ui import demo
+app = gr.mount_gradio_app(app, demo, path="/ui")
+
 if __name__ == "__main__":
-    uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("app:app", host="0.0.0.0", port=7860, reload=False)
